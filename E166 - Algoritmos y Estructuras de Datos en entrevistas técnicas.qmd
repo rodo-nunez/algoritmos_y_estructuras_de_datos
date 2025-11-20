@@ -1,0 +1,1706 @@
+---
+title: "Algoritmos y Estructuras de Datos en Entrevistas Técnicas"
+subtitle: "Guía práctica para prepararse con Python"
+author: "en_coders - Claude guiado y corregido por Rodo"
+date: today
+format:
+  html:
+    theme: darkly
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-summary: "Ver código"
+    number-sections: true
+    smooth-scroll: true
+lang: es
+---
+
+# Introducción
+
+En esta guía aprenderemos las estructuras de datos y algoritmos más importantes para afrontar entrevistas técnicas. Nos enfocamos en Python y en los patrones que los entrevistadores esperan que domines.
+
+------------------------------------------------------------------------
+
+# Estructuras de Datos Fundamentales
+
+## Arrays (Listas en Python)
+
+### Definición
+
+Un array es una estructura de datos que almacena elementos del mismo tipo en posiciones de memoria contiguas. En Python, las listas son la implementación de arrays dinámicos que pueden cambiar de tamaño.
+
+**Características:**
+
+-   Acceso en O(1) por índice
+
+-   Inserción/eliminación al final en O(1)
+
+-   Inserción/eliminación no al final en O(n)
+
+-   Búsqueda lineal en O(n)
+
+### Ejemplo
+
+```{python}
+# Crear y manipular una lista
+numeros = [1, 2, 3, 4, 5]
+
+# Acceso por índice
+print(f"Primer elemento: {numeros[0]}")  # O(1)
+
+# Agregar elemento al final
+numeros.append(6)  # O(1)
+
+# Insertar en posición específica
+numeros.insert(2, 10)  # O(n)
+
+# Eliminar elemento
+numeros.pop()  # O(1) si es el último
+
+# Iterar sobre la lista
+for num in numeros: # O(n)
+    print(num)
+```
+
+------------------------------------------------------------------------
+
+## Strings
+
+### Definición
+
+Un string es una secuencia de caracteres inmutable en Python. Se puede trabajar con substrings, búsquedas y manipulaciones.
+
+**Características:**
+
+-   Acceso por índice en O(1)
+
+-   Búsqueda de subcadena en O(n\*m)
+
+-   Inmutable en Python (crear nuevo string es O(n))
+
+-   Conversión a array de caracteres con list()
+
+-   Complejidad en espacio en O(n)
+
+### Ejemplo
+
+```{python}
+# Trabajar con strings
+texto = "entrevista técnica"
+
+# Acceso por índice
+print(f"Primer carácter: {texto[0]}")  # O(1)
+
+# Slicing
+print(f"Primeras 5 letras: {texto[:5]}")  # O(k) donde k es el tamaño del slice
+
+# Búsqueda
+print(f"Índice de 'técnica': {texto.find('técnica')}")
+
+# Conversión a lista
+caracteres = list(texto)
+print(caracteres)
+
+# Crear string a partir de lista
+palabra = ''.join(['p', 'y', 't', 'h', 'o', 'n'])
+print(palabra)
+```
+
+### Diferencias en complejidad
+
+| Método | Complejidad | Descripción | Eficiencia |
+|:-------------|:-------------|:----------------------------|:-------------|
+| `"".join(lista)` | 🟢 **O(n)** | Construye la cadena final de una sola vez, sabiendo su tamaño total. | ✅ Muy eficiente |
+| `list.append()` + `"".join()` | 🟢 **O(n)** | Usa una lista temporal (append es O(1)) y luego una sola concatenación con join. | ✅ Muy eficiente |
+| `+=` en bucle | 🔴 **O(n²)** | Cada concatenación crea una nueva cadena y copia todo lo anterior. | ❌ Muy ineficiente |
+
+```{python}
+import time
+
+palabras = ["python"] * 100_000
+
+# 1️⃣ join directo
+start = time.time()
+"".join(palabras)
+print("join directo:", round(time.time() - start, 4), "s")
+
+# 2️⃣ append + join
+start = time.time()
+temp = []
+for p in palabras:
+    temp.append(p)
+"".join(temp)
+print("append + join:", round(time.time() - start, 4), "s")
+
+# 3️⃣ concatenación con +=
+start = time.time()
+s = ""
+for p in palabras:
+    s += p
+print("+= :", round(time.time() - start, 4), "s")
+
+
+```
+
+------------------------------------------------------------------------
+
+## Hash Tables (Diccionarios en Python)
+
+### Definición
+
+Una hash table es una estructura que mapea claves a valores usando una función hash. En Python, los diccionarios son hash tables que permiten búsqueda, inserción y eliminación en O(1) promedio.
+
+**Características:**
+
+-   Inserción en O(1) promedio
+
+-   Búsqueda en O(1) promedio
+
+-   Eliminación en O(1) promedio
+
+-   Uso de memoria proporcional a la cantidad de elementos
+
+-   Complejidad en espacio en O(n)
+
+### Ejemplo
+
+```{python}
+# Crear y manipular diccionarios
+estudiante = {
+    "nombre": "Ana",
+    "edad": 25,
+    "carrera": "Ingeniería"
+}
+
+# Acceso a valores
+print(f"Nombre: {estudiante['nombre']}")  # O(1)
+
+# Agregar nuevo campo
+estudiante["semestre"] = 5  # O(1)
+
+# Verificar si existe una clave
+if "edad" in estudiante:
+    print(f"La edad es: {estudiante['edad']}")
+
+# Iterar sobre diccionario
+for clave, valor in estudiante.items():
+    print(f"{clave}: {valor}")
+
+# Usar diccionario para contar frecuencias
+palabras = ["python", "java", "python", "c++", "java", "python"]
+frecuencia = {}
+for palabra in palabras:
+    frecuencia[palabra] = frecuencia.get(palabra, 0) + 1
+print(f"Frecuencias: {frecuencia}")
+```
+
+------------------------------------------------------------------------
+
+## Stacks (Pilas)
+
+### Definición
+
+Un stack es una estructura de datos LIFO (Last In, First Out). El último elemento insertado es el primero en salir. Operaciones principales: push (agregar) y pop (remover).
+
+**Características:**
+
+-   Push en O(1)
+
+-   Pop en O(1)
+
+-   Peek (ver tope) en O(1)
+
+-   Complejidad en espacio en O(n)
+
+### Ejemplo
+
+```{python}
+# Implementar un stack
+class Stack:
+    def __init__(self):
+        self.items = []
+    
+    def push(self, item):
+        """Agregar elemento al tope"""
+        self.items.append(item)  # O(1)
+    
+    def pop(self):
+        """Remover y retornar elemento del tope"""
+        if not self.is_empty():
+            return self.items.pop()  # O(1)
+        return None
+    
+    def peek(self):
+        """Ver el elemento del tope sin remover"""
+        if not self.is_empty():
+            return self.items[-1]  # O(1)
+        return None
+    
+    def is_empty(self):
+        return len(self.items) == 0
+    
+    def size(self):
+        return len(self.items)
+
+# Usar el stack
+stack = Stack()
+stack.push(1)
+stack.push(2)
+stack.push(3)
+
+print(f"Tope: {stack.peek()}")  # 3
+print(f"Removido: {stack.pop()}")  # 3
+print(f"Tamaño: {stack.size()}")  # 2
+```
+
+Python no tiene una estructura `Stack` nativa en el módulo estándar. Pero podemos usar listas o importar deque.
+
+1.  **Usar `list`** (más simple):
+
+```{python}
+stack = []
+item = 7
+stack.append(item)      # push
+stack[-1]               # peek
+stack.pop()             # pop
+```
+
+2.  **Usar `collections.deque`** (más eficiente):
+
+```{python}
+from collections import deque
+stack = deque()
+item = 7
+stack.append(item)      # push
+stack[-1]               # peek
+stack.pop()             # pop
+```
+
+La clase que mostramos arriba es más didáctica para entender el concepto, pero en la práctica solo necesitas `list` o `deque`.
+
+------------------------------------------------------------------------
+
+## Queues (Colas)
+
+### Definición
+
+Una queue es una estructura FIFO (First In, First Out). El primer elemento insertado es el primero en salir. Operaciones principales: enqueue (agregar al final) y dequeue (remover del inicio).
+
+**Características:**
+
+-   Enqueue en O(1)
+
+-   Dequeue en O(1)
+
+-   Peek en O(1)
+
+-   Complejidad en espacio en O(n)
+
+### Ejemplo
+
+```{python}
+from collections import deque
+
+# Usar deque para implementar una queue eficiente
+cola = deque()
+
+# Enqueue - agregar al final
+cola.append(1)  # O(1)
+cola.append(2)
+cola.append(3)
+
+# Dequeue - remover del inicio
+primer = cola.popleft()  # O(1)
+print(f"Primer elemento: {primer}")
+
+# Peek
+print(f"Siguiente elemento: {cola[0]}")
+
+# Verificar si está vacía
+if cola:
+    print(f"La cola tiene {len(cola)} elementos")
+
+# Iterar
+print("Elementos en la cola:")
+for elemento in cola:
+    print(elemento)
+```
+
+------------------------------------------------------------------------
+
+## Linked Lists (Listas Enlazadas)
+
+### Definición
+
+Una linked list es una estructura donde cada nodo contiene datos y una referencia al siguiente nodo. A diferencia de arrays, no usa memoria contigua.
+
+**Características:**
+
+-   Inserción al inicio en O(1)
+
+-   Inserción en O(n) en posición específica
+
+-   Búsqueda en O(n)
+
+-   Eliminación en O(n)
+
+-   Complejidad en espacio en O(n)
+
+### Ejemplo
+
+```{python}
+# Definir un nodo
+class Node:
+    def __init__(self, valor):
+        self.valor = valor
+        self.siguiente = None
+
+# Definir una linked list
+class LinkedList:
+    def __init__(self):
+        self.cabeza = None
+    
+    def insertar_inicio(self, valor):
+        """Insertar al inicio en O(1)"""
+        nuevo_nodo = Node(valor)
+        nuevo_nodo.siguiente = self.cabeza
+        self.cabeza = nuevo_nodo
+    
+    def insertar_final(self, valor):
+        """Insertar al final en O(n)"""
+        nuevo_nodo = Node(valor)
+        if not self.cabeza:
+            self.cabeza = nuevo_nodo
+            return
+        
+        actual = self.cabeza
+        while actual.siguiente:
+            actual = actual.siguiente
+        actual.siguiente = nuevo_nodo
+    
+    def buscar(self, valor):
+        """Buscar un valor en O(n)"""
+        actual = self.cabeza
+        while actual:
+            if actual.valor == valor:
+                return True
+            actual = actual.siguiente
+        return False
+    
+    def imprimir(self):
+        """Imprimir la lista"""
+        actual = self.cabeza
+        while actual:
+            print(actual.valor, end=" -> ")
+            actual = actual.siguiente
+        print("None")
+
+# Usar la linked list
+lista = LinkedList()
+lista.insertar_inicio(1)
+lista.insertar_final(2)
+lista.insertar_final(3)
+lista.imprimir()
+print(f"¿Contiene 2? {lista.buscar(2)}")
+```
+
+------------------------------------------------------------------------
+
+## Trees (Árboles)
+
+### Definición
+
+Un árbol es una estructura jerárquica donde cada nodo puede tener múltiples hijos. El nodo superior se llama raíz. Casos especiales: Binary Trees (máximo 2 hijos), Binary Search Trees (BST), etc.
+
+**Características:**
+
+-   Búsqueda en BST en O(log n) promedio
+
+-   Inserción en BST en O(log n) promedio
+
+-   Complejidad en espacio en O(n).
+
+### Ejemplo
+
+```{python}
+# Definir un nodo de árbol binario
+class TreeNode:
+    def __init__(self, valor):
+        self.valor = valor
+        self.izquierda = None
+        self.derecha = None
+
+# Definir un árbol binario de búsqueda
+class BST:
+    def __init__(self):
+        self.raiz = None
+    
+    def insertar(self, valor):
+        """Insertar un valor en O(log n)"""
+        if not self.raiz:
+            self.raiz = TreeNode(valor)
+        else:
+            self._insertar_recursivo(self.raiz, valor)
+    
+    def _insertar_recursivo(self, nodo, valor):
+        if valor < nodo.valor:
+            if nodo.izquierda is None:
+                nodo.izquierda = TreeNode(valor)
+            else:
+                self._insertar_recursivo(nodo.izquierda, valor)
+        else:
+            if nodo.derecha is None:
+                nodo.derecha = TreeNode(valor)
+            else:
+                self._insertar_recursivo(nodo.derecha, valor)
+    
+    def buscar(self, valor):
+        """Buscar un valor en O(log n)"""
+        return self._buscar_recursivo(self.raiz, valor)
+    
+    def _buscar_recursivo(self, nodo, valor):
+        if nodo is None:
+            return False
+        
+        if valor == nodo.valor:
+            return True
+        elif valor < nodo.valor:
+            return self._buscar_recursivo(nodo.izquierda, valor)
+        else:
+            return self._buscar_recursivo(nodo.derecha, valor)
+
+# Usar el BST
+arbol = BST()
+for val in [5, 3, 7, 1, 9]:
+    arbol.insertar(val)
+
+print(f"¿Contiene 7? {arbol.buscar(7)}")
+print(f"¿Contiene 10? {arbol.buscar(10)}")
+```
+
+------------------------------------------------------------------------
+
+## Heaps (Montículos)
+
+### Definición
+
+Un heap es un árbol binario completo que satisface la propiedad heap. En un min-heap, cada padre es menor que sus hijos. En un max-heap, cada padre es mayor que sus hijos.
+
+**Características:**
+
+-   Inserción en O(log n)
+
+-   Extracción del mínimo/máximo en O(log n)
+
+-   Ver mínimo/máximo en O(1)
+
+-   Espacio en O(n)
+
+### Ejemplo
+
+```{python}
+import heapq
+
+# Usar heapq para min-heap
+numeros = [5, 2, 8, 1, 9]
+heap = numeros.copy()
+heapq.heapify(heap)  # Crear heap en O(n)
+
+print(f"Heap: {heap}")
+
+# Insertar elemento
+heapq.heappush(heap, 3)  # O(log n)
+
+# Extraer mínimo
+minimo = heapq.heappop(heap)  # O(log n)
+print(f"Mínimo extraído: {minimo}")
+
+# Ver mínimo sin extraer
+print(f"Próximo mínimo: {heap[0]}")  # O(1)
+
+# Para max-heap, insertar negativos
+max_heap = [-x for x in numeros]
+heapq.heapify(max_heap)
+maximo = -heapq.heappop(max_heap)
+print(f"Máximo: {maximo}")
+```
+
+------------------------------------------------------------------------
+
+## Graphs (Grafos)
+
+### Definición
+
+Un grafo es una estructura compuesta por nodos (vértices) y aristas que conectan pares de nodos. Pueden ser dirigidos o no dirigidos, ponderados o sin peso.
+
+**Características:**
+
+-   Representación con matriz de adyacencia: O(V²) espacio, O(1) búsqueda de si existe o no una arista (i,j)
+
+-   Representación con lista de adyacencia: O(V+E) espacio, O(1) promedio búsqueda de vecinos
+
+-   Traversal (DFS/BFS): O(V+E) en recorrer todo el grafo
+
+### Ejemplo
+
+```{python}
+# Representar un grafo con lista de adyacencia
+class Grafo:
+    def __init__(self):
+        self.adyacencia = {}
+    
+    def agregar_nodo(self, nodo):
+        if nodo not in self.adyacencia:
+            self.adyacencia[nodo] = []
+    
+    def agregar_arista(self, u, v):
+        """Agregar arista dirigida de u a v"""
+        self.agregar_nodo(u)
+        self.agregar_nodo(v)
+        self.adyacencia[u].append(v)
+    
+    def obtener_vecinos(self, nodo):
+        return self.adyacencia.get(nodo, [])
+
+# Usar el grafo
+grafo = Grafo()
+grafo.agregar_arista(1, 2)
+grafo.agregar_arista(1, 3)
+grafo.agregar_arista(2, 4)
+grafo.agregar_arista(3, 4)
+
+print(f"Vecinos de 1: {grafo.obtener_vecinos(1)}")
+print(f"Vecinos de 2: {grafo.obtener_vecinos(2)}")
+```
+
+------------------------------------------------------------------------
+
+# Algoritmos y Patrones Importantes
+
+## Pattern: Two Pointers
+
+### Definición
+
+El patrón Two Pointers utiliza dos punteros que se mueven a través de una estructura de datos. Es especialmente útil en arrays y strings para problemas de búsqueda, validación y transformación.
+
+**Cuándo usarlo:**
+
+-   Arrays/strings ordenados
+
+-   Encontrar pares con suma objetivo
+
+-   Validar palíndromos
+
+-   Remover duplicados
+
+### Ejemplo LeetCode: Two Sum II (Input Array Is Sorted)
+
+**Problema:** Dado un array de números ya ordenado, encuentra dos números que sumen a un objetivo específico.
+
+```{python}
+def two_sum_sorted(numbers, target):
+    """
+    Encontrar dos números que sumen al objetivo en un array ordenado.
+    
+    Complejidad: O(n) tiempo, O(1) espacio
+    """
+    izquierda = 0
+    derecha = len(numbers) - 1
+    
+    while izquierda < derecha:
+        suma = numbers[izquierda] + numbers[derecha]
+        
+        if suma == target:
+            return [izquierda + 1, derecha + 1]  # 1-indexed
+        elif suma < target:
+            izquierda += 1
+        else:
+            derecha -= 1
+    
+    return []
+
+# Test
+resultado = two_sum_sorted([2, 7, 11, 15], 9)
+print(f"Índices: {resultado}")  # [1, 2]
+```
+
+------------------------------------------------------------------------
+
+## Pattern: Sliding Window
+
+### Definición
+
+El patrón Sliding Window mantiene una ventana de tamaño fijo o variable que se desliza a través de una estructura de datos. Reduce problemas de búsqueda a través de subarrays de O(n²) a O(n).
+
+**Cuándo usarlo:**
+
+-   Subarrays con suma máxima/mínima
+
+-   Subcadenas con propiedades específicas
+
+-   Problemas con "contiguous" en el enunciado
+
+### Ejemplo LeetCode: Longest Substring Without Repeating Characters
+
+**Problema:** Encuentra la subcadena más larga sin caracteres repetidos.
+
+```{python}
+def longest_substring_without_repeating(s):
+    """
+    Encontrar la subcadena más larga sin caracteres repetidos.
+    
+    Complejidad: O(n) tiempo, O(min(n, m)) espacio donde m es el tamaño del charset
+    """
+    char_index = {}
+    izquierda = 0
+    max_len = 0
+    
+    for derecha in range(len(s)):
+        char = s[derecha]
+        
+        # Si el carácter ya existe y está dentro de la ventana
+        if char in char_index and char_index[char] >= izquierda:
+            izquierda = char_index[char] + 1
+        
+        # Actualizar el índice del carácter
+        char_index[char] = derecha
+        
+        # Actualizar la longitud máxima
+        max_len = max(max_len, derecha - izquierda + 1)
+    
+    return max_len
+
+# Test
+resultado = longest_substring_without_repeating("abcabcbb")
+print(f"Longitud máxima: {resultado}")  # 3 (abc)
+```
+
+------------------------------------------------------------------------
+
+## Pattern: Depth-First Search (DFS)
+
+### Definición
+
+DFS es un algoritmo de traversal que explora todo lo posible a lo largo de cada rama antes de retroceder. Se implementa típicamente con recursión o un stack.
+
+**Complejidad:** O(V+E) para grafos, O(n) para árboles
+
+**Cuándo usarlo:**
+
+-   Exploración exhaustiva de nodos
+
+-   Detección de ciclos
+
+-   Topological sorting
+
+-   Path finding
+
+### Ejemplo LeetCode: Number of Islands
+
+**Problema:** Dado una matriz de '1's (tierra) y '0's (agua), cuenta el número de islas.
+
+```{python}
+def num_islands(grid):
+    """
+    Contar el número de islas usando DFS.
+    
+    Complejidad: O(m*n) tiempo, O(m*n) espacio en peor caso (recursión)
+    """
+    if not grid:
+        return 0
+    
+    rows, cols = len(grid), len(grid[0])
+    visited = set()
+    count = 0
+    
+    def dfs(r, c):
+        # Validar límites y si ya fue visitado
+        if r < 0 or r >= rows or c < 0 or c >= cols:
+            return
+        if (r, c) in visited or grid[r][c] == '0':
+            return
+        
+        visited.add((r, c))
+        
+        # Explorar 4 direcciones
+        dfs(r + 1, c)  # abajo
+        dfs(r - 1, c)  # arriba
+        dfs(r, c + 1)  # derecha
+        dfs(r, c - 1)  # izquierda
+    
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == '1' and (r, c) not in visited:
+                dfs(r, c)
+                count += 1
+    
+    return count
+
+# Test
+grid = [
+    ["1","1","1","1","0"],
+    ["1","1","0","1","0"],
+    ["1","1","0","0","0"],
+    ["0","0","0","0","0"]
+]
+resultado = num_islands(grid)
+print(f"Número de islas: {resultado}")  # 1
+```
+
+------------------------------------------------------------------------
+
+## Pattern: Breadth-First Search (BFS)
+
+### Definición
+
+BFS es un algoritmo de traversal que explora nodos nivel por nivel. Se implementa típicamente con una queue.
+
+**Complejidad:** O(V+E) para grafos, O(n) para árboles
+
+**Cuándo usarlo:**
+
+-   Camino más corto en grafos sin pesos
+
+-   Exploración por niveles
+
+-   Problemas de distancia
+
+-   Flood fill
+
+### Ejemplo LeetCode: Binary Tree Level Order Traversal
+
+**Problema:** Realiza un traversal por niveles de un árbol binario.
+
+```{python}
+from collections import deque
+
+class TreeNode:
+    def __init__(self, valor):
+        self.valor = valor
+        self.izquierda = None
+        self.derecha = None
+
+def level_order(raiz):
+    """
+    Traversal por niveles usando BFS.
+    
+    Complejidad: O(n) tiempo, O(w) espacio donde w es el ancho máximo
+    """
+    if not raiz:
+        return []
+    
+    resultado = []
+    cola = deque([raiz])
+    
+    while cola:
+        nivel_size = len(cola)
+        nivel_actual = []
+        
+        # Procesar todos los nodos del nivel actual
+        for _ in range(nivel_size):
+            nodo = cola.popleft()
+            nivel_actual.append(nodo.valor)
+            
+            if nodo.izquierda:
+                cola.append(nodo.izquierda)
+            if nodo.derecha:
+                cola.append(nodo.derecha)
+        
+        resultado.append(nivel_actual)
+    
+    return resultado
+
+# Test
+raiz = TreeNode(1)
+raiz.izquierda = TreeNode(2)
+raiz.derecha = TreeNode(3)
+raiz.izquierda.izquierda = TreeNode(4)
+raiz.izquierda.derecha = TreeNode(5)
+
+resultado = level_order(raiz)
+print(f"Traversal por niveles: {resultado}")  # [[1], [2, 3], [4, 5]]
+```
+
+------------------------------------------------------------------------
+
+# Cómo Prepararse para Entrevistas Técnicas
+
+## Metodología: Problem Solving
+
+### 1. Escucha (Listen)
+
+-   Lee el problema cuidadosamente
+
+-   Pregunta por clarificaciones
+
+-   Confirma los supuestos (¿ordenado? ¿duplicados? ¿negativos?)
+
+-   Pregunta por los rangos de entrada
+
+### 2. Dibuja un Ejemplo (Draw)
+
+-   Usa un ejemplo no trivial
+
+-   Dibuja o visualiza el problema
+
+-   Identifica patrones
+
+-   Entiende qué transformación necesitas
+
+### 3. Fuerza Bruta (Brute Force)
+
+-   Propón una solución inicial incluso si es ineficiente
+
+-   Explica tu lógica claramente
+
+-   No codes todavía, solo planifica
+
+### 4. Optimiza (Optimize)
+
+#### BUD - Bottlenecks, Unnecessary work, Duplicated work
+
+**Bottlenecks:** ¿Dónde pasa la mayoría del tiempo?
+
+-   Búsquedas innecesarias
+
+-   Loops anidados
+
+-   Conversiones de estructura
+
+**Trabajo Innecesario:** ¿Hacemos algo que no necesitamos?
+
+-   Procesamos datos que no usamos
+
+-   Comparamos elementos múltiples veces
+
+-   Exploramos caminos inválidos
+
+**Trabajo Duplicado:** ¿Calculamos lo mismo varias veces?
+
+-   Use memoization
+
+-   Use dynamic programming
+
+-   Cache resultados
+
+#### Space-Time Tradeoff
+
+-   Podemos usar espacio adicional para mejorar tiempo
+
+-   Ejemplos: Hash tables para O(1) lookup, cache para evitar recálculos
+
+### 5. Explica tu Algoritmo (Walk Through)
+
+-   Camina a través del algoritmo con el ejemplo
+
+-   Explica cada paso
+
+-   Verifica que es correcto conceptualmente
+
+### 6. Implementa (Code)
+
+#### Expectativas
+
+**Correctitud:** El código debe resolver el problema correctamente
+
+**Legibilidad:**
+
+-   Nombres descriptivos
+
+-   Código modular
+
+-   Comentarios donde sea necesario
+
+**Mantenibilidad:**
+
+-   Evita duplication
+
+-   Funciones reutilizables
+
+-   Manejo de edge cases
+
+**Performance:**
+
+-   Complejidad óptima
+
+-   Sin optimizaciones prematuras
+
+#### Estructura
+
+-   Modulariza desde arriba hacia abajo
+
+-   Asume que tienes funciones simples disponibles
+
+-   Implementa funciones helper al final si es necesario
+
+### 7. Verifica (Verify)
+
+#### Conceptual Walkthrough
+
+-   Revisa la lógica del código
+
+-   ¿Tiene sentido?
+
+-   ¿Cubre todos los casos?
+
+#### Hot Spots
+
+Revisa líneas de alto riesgo:
+
+-   Operaciones matemáticas
+
+-   Movimiento de índices
+
+-   Parámetros en llamadas recursivas
+
+-   Base cases
+
+-   Condiciones límite
+
+#### Test Cases
+
+**Ejemplo diferente:** Prueba con datos distintos a los que usaste antes
+
+**Ejemplo pequeño:** Prueba con el mínimo input válido
+
+**Edge Cases Aburridos:**
+
+-   Valores nulos/vacíos
+
+-   Un solo elemento
+
+-   Valores duplicados
+
+-   Valores ordenados/sin ordenar
+
+**Edge Cases Interesantes:**
+
+-   Números negativos
+
+-   Límites de rangos
+
+-   Casos de error
+
+**No:** No pruebes un ejemplo complicado a mano
+
+### 8. Comunicación
+
+-   Maneja el problema, no solo resuelve
+
+-   Muestra tu proceso de pensamiento
+
+-   Haz preguntas
+
+-   Propón una solución inicial pero también piensa en problemas
+
+-   Habla mientras codeas
+
+-   Usa ejemplos para explicar
+
+-   Sé honesto con errores
+
+-   Admite si ya has visto el problema
+
+-   Escucha a tu entrevistador
+
+-   Captura el valor de las pistas
+
+-   Sigue el camino que tu entrevistador sugiere
+
+------------------------------------------------------------------------
+
+## Estructuras de Datos: Cuándo Usarlas
+
+### Arrays / Listas
+
+**Ventajas:**
+
+-   Acceso rápido por índice O(1)
+
+-   Iteración eficiente
+
+-   Cache-friendly en memoria
+
+**Cuándo usar:**
+
+-   Necesitas acceso por posición
+
+-   Trabajas con datos secuenciales
+
+-   El tamaño está predefinido o cambia poco
+
+**Evitar:**
+
+-   Inserciones/eliminaciones frecuentes en medio
+
+### Hash Tables / Diccionarios
+
+**Ventajas:**
+
+-   Búsqueda/inserción/eliminación O(1)
+
+-   Flexible con tipos de claves
+
+-   Sin necesidad de ordenamiento
+
+**Cuándo usar:**
+
+-   Contador de frecuencias
+
+-   Mapa de relaciones
+
+-   Cache/memoization
+
+-   Validación de pertenencia
+
+**Evitar:**
+
+-   Cuando necesitas orden
+
+-   Cuando necesitas rango queries
+
+### Strings
+
+**Ventajas:**
+
+-   Optimizados para búsqueda de patrones
+
+-   Muchas operaciones built-in
+
+**Cuándo usar:**
+
+-   Manipulación de texto
+
+-   Búsqueda de subcadenas
+
+-   Validación de formato
+
+**Evitar:**
+
+-   Concatenación repetida (usar list + join)
+
+### Linked Lists
+
+**Ventajas:**
+
+-   Inserción/eliminación al inicio O(1)
+
+-   Sin overhead de redimensionamiento
+
+-   Flexible en tamaño
+
+**Cuándo usar:**
+
+-   Operaciones frecuentes al inicio/final
+
+-   No necesitas acceso por índice
+
+**Evitar:**
+
+-   Cuando necesitas acceso aleatorio
+
+-   Cuando la memoria es escasa
+
+### Stacks
+
+**Ventajas:**
+
+-   LIFO intuitivo para ciertos problemas
+
+-   O(1) para todas las operaciones
+
+**Cuándo usar:**
+
+-   Expresiones balanceadas
+
+-   Undo/redo
+
+-   Backtracking
+
+-   Evaluación de expresiones
+
+### Queues
+
+**Ventajas:**
+
+-   FIFO para problemas de orden
+
+-   O(1) para operaciones
+
+**Cuándo usar:**
+
+-   BFS
+
+-   Procesamiento por orden de llegada
+
+-   Simulaciones
+
+### Trees
+
+**Ventajas:**
+
+-   BST: búsqueda O(log n)
+
+-   Estructura jerárquica natural
+
+-   Balanceado: mantiene eficiencia
+
+**Cuándo usar:**
+
+-   Datos jerárquicos
+
+-   Búsqueda rápida
+
+-   Ordenamiento dinámico
+
+### Heaps
+
+**Ventajas:**
+
+-   K elementos más grandes/pequeños
+
+-   Priority queues
+
+**Cuándo usar:**
+
+-   Top K problems
+
+-   Scheduling
+
+-   Merge sorted lists
+
+### Graphs
+
+**Ventajas:**
+
+-   Modela relaciones complejas
+
+-   DFS/BFS para exploración
+
+**Cuándo usar:**
+
+-   Redes sociales
+
+-   Rutas/mapas
+
+-   Dependencias
+
+-   Conectividad
+
+------------------------------------------------------------------------
+
+## Patrones de Solución
+
+### Identificar el Patrón
+
+1.  **Two Pointers:** ¿Arrays ordenados? ¿Parejas?
+2.  **Sliding Window:** ¿Subarrays contiguos?
+3.  **DFS/BFS:** ¿Necesitas explorar todos los caminos?
+4.  **Dynamic Programming:** ¿Hay subproblemas que se repiten?
+5.  **Greedy:** ¿Funciona elegir la opción óptima localmente?
+6.  **Binary Search:** ¿Array ordenado? ¿Búsqueda eficiente?
+
+### Template Pattern Matching
+
+Para cada problema:
+
+1.  ¿Cuál es la entrada?
+2.  ¿Cuál es la salida?
+3.  ¿Cuál es la transformación?
+4.  ¿Qué estructura de datos necesito?
+5.  ¿Qué complejidad es aceptable?
+
+------------------------------------------------------------------------
+
+## Tips Finales para la Entrevista
+
+✓ **Practica en LeetCode** (Medium level)
+
+✓ **Entiende, no memorices** - comprende por qué funciona
+
+✓ **Habla en voz alta** - el entrevistador quiere saber tu pensamiento
+
+✓ **No apures el código** - asegúrate de estar listo antes
+
+✓ **Valida casos límite** - vacíos, negativ, duplicados
+
+✓ **Refactoriza si ves problemas** - pero sin fixes chapuceros
+
+✓ **Piensa mientras testeas** - entiende qué está pasando
+
+------------------------------------------------------------------------
+
+## Más Patrones Algoritmos
+
+## Pattern: Dynamic Programming
+
+### Definición
+
+Dynamic Programming (DP) optimiza problemas que tienen subestructura óptima y subproblemas superpuestos. Evita recalcular los mismos subproblemas.
+
+**Características:** - Memoization (top-down): recursión + cache - Tabulation (bottom-up): iterativo - Reduce complejidad exponencial a polinomial
+
+**Cuándo usarlo:** - El problema pide máximo/mínimo/contar formas - Hay subproblemas que se repiten - Se puede formular recursivamente
+
+### Ejemplo LeetCode: Climbing Stairs
+
+**Problema:** Subes una escalera de n escalones. Cada vez puedes subir 1 o 2 escalones. ¿De cuántas formas diferentes puedes subir?
+
+```{python}
+def climb_stairs(n):
+    """
+    Contar formas de subir escalera usando DP.
+    
+    Complejidad: O(n) tiempo, O(1) espacio
+    """
+    if n <= 2:
+        return n
+    
+    # dp[i] representa formas de llegar al escalón i
+    anterior_dos = 1  # formas de llegar a escalón 1
+    anterior_uno = 2  # formas de llegar a escalón 2
+    
+    for i in range(3, n + 1):
+        actual = anterior_uno + anterior_dos
+        anterior_dos = anterior_uno
+        anterior_uno = actual
+    
+    return anterior_uno
+
+# Test
+resultado = climb_stairs(4)
+print(f"Formas de subir 4 escalones: {resultado}")  # 5
+# Explicación: [1+1+1+1], [1+1+2], [1+2+1], [2+1+1], [2+2]
+```
+
+------------------------------------------------------------------------
+
+## Pattern: Binary Search
+
+### Definición
+
+Binary Search busca un elemento en un array ordenado dividiendo el espacio de búsqueda a la mitad cada iteración.
+
+**Complejidad:** O(log n) tiempo, O(1) espacio
+
+**Cuándo usarlo:** - Array está ordenado - Necesitas búsqueda eficiente - "Answer is in a range" problems
+
+### Ejemplo LeetCode: Search in Rotated Sorted Array
+
+**Problema:** Busca un número en un array rotado ordenado.
+
+```{python}
+def search_rotated_array(nums, target):
+    """
+    Buscar en array rotado usando binary search.
+    
+    Complejidad: O(log n) tiempo
+    """
+    izquierda, derecha = 0, len(nums) - 1
+    
+    while izquierda <= derecha:
+        mid = (izquierda + derecha) // 2
+        
+        if nums[mid] == target:
+            return mid
+        
+        # Determinar qué lado está ordenado
+        if nums[izquierda] <= nums[mid]:
+            # Lado izquierdo está ordenado
+            if nums[izquierda] <= target < nums[mid]:
+                # Target está en lado izquierdo ordenado
+                derecha = mid - 1
+            else:
+                izquierda = mid + 1
+        else:
+            # Lado derecho está ordenado
+            if nums[mid] < target <= nums[derecha]:
+                # Target está en lado derecho ordenado
+                izquierda = mid + 1
+            else:
+                derecha = mid - 1
+    
+    return -1
+
+# Test
+resultado = search_rotated_array([4, 5, 6, 7, 0, 1, 2], 0)
+print(f"Índice: {resultado}")  # 4
+```
+
+------------------------------------------------------------------------
+
+## Pattern: Greedy Algorithms
+
+### Definición
+
+Un algoritmo greedy elige la opción óptima local en cada paso, esperando encontrar una solución global óptima.
+
+**Cuándo funciona:** - Tiene estructura óptima - Selección greedy lleva a solución óptima - No hay conflictos entre elecciones
+
+**Cuándo usarlo:** - Activity selection - Huffman coding - Interval scheduling - Fractional knapsack
+
+### Ejemplo LeetCode: Jump Game
+
+**Problema:** Dado un array donde cada elemento es el máximo de saltos que puedes dar, ¿puedes llegar al último índice?
+
+```{python}
+def can_jump(nums):
+    """
+    Verificar si puedes llegar al final usando greedy.
+    
+    Complejidad: O(n) tiempo, O(1) espacio
+    """
+    max_reach = 0
+    
+    for i in range(len(nums)):
+        # Si el índice actual es mayor que lo máximo alcanzable, no podemos llegar
+        if i > max_reach:
+            return False
+        
+        # Actualizar el máximo que podemos alcanzar
+        max_reach = max(max_reach, i + nums[i])
+        
+        # Si ya alcanzamos el final, retornamos True
+        if max_reach >= len(nums) - 1:
+            return True
+    
+    return False
+
+# Test
+resultado = can_jump([2, 3, 1, 1, 4])
+print(f"¿Puedes llegar al final? {resultado}")  # True
+
+resultado2 = can_jump([3, 2, 1, 0, 4])
+print(f"¿Puedes llegar al final? {resultado2}")  # False
+```
+
+------------------------------------------------------------------------
+
+## Pattern: Recursion y Backtracking
+
+### Definición
+
+Recursion es una técnica donde una función se llama a sí misma. Backtracking usa recursion para explorar todas las soluciones posibles y "retrocede" cuando encuentra un camino inválido.
+
+**Complejidad:** Generalmente O(branches\^depth)
+
+**Cuándo usarlo:** - Problemas combinatorios - Permutaciones/combinaciones - Maze solving - Constraint satisfaction
+
+### Ejemplo LeetCode: Permutations
+
+**Problema:** Genera todas las permutaciones de una lista de números.
+
+```{python}
+def permutations(nums):
+    """
+    Generar todas las permutaciones usando backtracking.
+    
+    Complejidad: O(n! * n) tiempo
+    """
+    resultado = []
+    
+    def backtrack(camino):
+        # Base case: si hemos usado todos los números
+        if len(camino) == len(nums):
+            resultado.append(camino[:])
+            return
+        
+        # Explorar todas las opciones
+        for num in nums:
+            if num not in camino:
+                camino.append(num)
+                backtrack(camino)
+                camino.pop()  # Backtrack
+    
+    backtrack([])
+    return resultado
+
+# Test
+resultado = permutations([1, 2, 3])
+print(f"Permutaciones de [1,2,3]: {resultado}")
+# [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
+```
+
+------------------------------------------------------------------------
+
+## Pattern: Divide and Conquer
+
+### Definición
+
+Divide and Conquer divide el problema en subproblemas independientes, los resuelve recursivamente y combina las soluciones.
+
+**Complejidad:** Depende del problema (merge sort es O(n log n))
+
+**Cuándo usarlo:** - Merge sort / Quick sort - Binary search - Closest pair of points - Strassen matrix multiplication
+
+### Ejemplo: Merge Sort
+
+**Problema:** Ordena un array usando merge sort.
+
+```{python}
+def merge_sort(arr):
+    """
+    Ordenar usando divide and conquer.
+    
+    Complejidad: O(n log n) tiempo, O(n) espacio
+    """
+    if len(arr) <= 1:
+        return arr
+    
+    # Dividir
+    mid = len(arr) // 2
+    izquierda = merge_sort(arr[:mid])
+    derecha = merge_sort(arr[mid:])
+    
+    # Conquistar: combinar
+    return merge(izquierda, derecha)
+
+def merge(izquierda, derecha):
+    """Combinar dos arrays ordenados"""
+    resultado = []
+    i = j = 0
+    
+    while i < len(izquierda) and j < len(derecha):
+        if izquierda[i] <= derecha[j]:
+            resultado.append(izquierda[i])
+            i += 1
+        else:
+            resultado.append(derecha[j])
+            j += 1
+    
+    resultado.extend(izquierda[i:])
+    resultado.extend(derecha[j:])
+    
+    return resultado
+
+# Test
+arr = [38, 27, 43, 3, 9, 82, 10]
+resultado = merge_sort(arr)
+print(f"Array ordenado: {resultado}")
+```
+
+------------------------------------------------------------------------
+
+## Problemas por Dificultad
+
+### Fácil (Easy)
+
+Estos problemas te ayudan a dominar los fundamentos:
+
+**Two Sum** - Hashtable para búsqueda O(1) - Conceptos: trade-off tiempo-espacio
+
+**Valid Parentheses** - Stack para matching - Conceptos: estructura de datos apropiada
+
+**Reverse String** - Two pointers - Conceptos: manipulación in-place
+
+**Binary Search** - Búsqueda eficiente - Conceptos: dividir y conquistar
+
+------------------------------------------------------------------------
+
+### Medio (Medium)
+
+Estos requieren elección de estructura y algoritmo:
+
+**Longest Substring Without Repeating Characters** - Sliding window + hash table - Conceptos: ventanas deslizantes
+
+**3Sum** - Two pointers después de sort - Conceptos: combinación de técnicas
+
+**Lowest Common Ancestor in BST** - Traversal de árbol - Conceptos: propiedades BST
+
+**Number of Islands** - DFS/BFS - Conceptos: exploración de grafos
+
+**Word Ladder** - BFS para camino más corto - Conceptos: grafos implícitos
+
+------------------------------------------------------------------------
+
+### Difícil (Hard)
+
+Requieren pensar creativamente:
+
+**Median of Two Sorted Arrays** - Binary search - Conceptos: pensamiento no convencional
+
+**Trapping Rain Water** - Two pointers o stack - Conceptos: optimización con estructura auxiliar
+
+**Serialize and Deserialize Binary Tree** - Traversal y parsing - Conceptos: codificación/decodificación
+
+------------------------------------------------------------------------
+
+## Checklist de Preparación
+
+### Semana 1-2: Estructuras Fundamentales
+
+-   [ ] Arrays / Listas
+-   [ ] Strings
+-   [ ] Hash Tables
+-   [ ] Stacks
+-   [ ] Queues
+
+**Problemas a resolver:** 5-10 easy problems en cada estructura
+
+### Semana 3-4: Estructuras Avanzadas
+
+-   [ ] Linked Lists
+-   [ ] Trees
+-   [ ] Graphs
+-   [ ] Heaps
+
+**Problemas a resolver:** 5-10 medium problems en cada estructura
+
+### Semana 5-6: Algoritmos y Patrones
+
+-   [ ] Two Pointers
+-   [ ] Sliding Window
+-   [ ] DFS / BFS
+-   [ ] Binary Search
+-   [ ] DP (intro)
+
+**Problemas a resolver:** 10-15 medium problems
+
+### Semana 7-8: Patrones Avanzados
+
+-   [ ] Dynamic Programming
+-   [ ] Greedy
+-   [ ] Backtracking
+-   [ ] Divide and Conquer
+
+**Problemas a resolver:** 10-15 medium/hard problems
+
+### Semana 9-10: Mock Interviews
+
+-   [ ] Practica timed problems (45 min)
+-   [ ] Graba tu voz explicando
+-   [ ] Pide feedback
+-   [ ] Itera en tus debilidades
+
+------------------------------------------------------------------------
+
+## Recursos Recomendados
+
+**LeetCode** - Explora por tema - Empieza con Easy - Progresa a Medium - Hard solo si tienes tiempo
+
+**Problemas Clásicos** - Two Sum - Best Time to Buy and Sell Stock - Contains Duplicate - Valid Parentheses - Merge Sorted Array
+
+**Conceptos Transversales** - Big O Notation - Trade-offs tiempo-espacio - In-place modifications - Recursion y stack overflow
+
+------------------------------------------------------------------------
+
+## Durante la Entrevista: Flowchart de Decisiones
+
+```         
+┌─ ¿Entiendes el problema?
+│  └─ NO → Pregunta clarificaciones
+│  └─ SÍ → Dibuja ejemplo
+│
+├─ ¿Ves un patrón?
+│  └─ NO → Brute force
+│  └─ SÍ → Optimiza basado en patrón
+│
+├─ ¿Puedes optimizar más?
+│  └─ SÍ → Identifica BUD
+│  └─ NO → Procede a code
+│
+├─ ¿Entiendes tu algoritmo?
+│  └─ NO → Revisa lógica
+│  └─ SÍ → Walk through
+│
+├─ ¿Está correcto?
+│  └─ NO → Ajusta algoritmo
+│  └─ SÍ → Code
+│
+├─ ¿El código compila?
+│  └─ NO → Fix syntax
+│  └─ SÍ → Test
+│
+└─ ¿Pasó todos los casos?
+   └─ NO → Debug
+   └─ SÍ → ¡Éxito!
+```
+
+------------------------------------------------------------------------
+
+## Errores Comunes a Evitar
+
+❌ **No preguntar por clarificaciones** - Asume cosas sobre el input - Resultado: solución incorrecta
+
+✓ **En su lugar:** Pregunta por rangos, tipos, edge cases
+
+------------------------------------------------------------------------
+
+❌ **Saltar directo a código** - No planificas el algoritmo - Resultado: código confuso y error
+
+✓ **En su lugar:** Explica primero, luego código
+
+------------------------------------------------------------------------
+
+❌ **Optimizar prematuramente** - Complejidad innecesaria - Resultado: pierdes tiempo
+
+✓ **En su lugar:** Brute force primero, luego optimiza
+
+------------------------------------------------------------------------
+
+❌ **No testear edge cases** - Funciona con ejemplo normal - Falla en vacíos/límites - Resultado: código rechazado
+
+✓ **En su lugar:** Test: vacío, un elemento, grande, negativo
+
+------------------------------------------------------------------------
+
+❌ **Código ilegible** - Variables confusas (x, y, z) - Sin estructura - Resultado: entrevistador no confía
+
+✓ **En su lugar:** Código limpio, nombres descriptivos, modular
+
+------------------------------------------------------------------------
+
+## Consejos Finales
+
+### Mentalidad
+
+-   Las entrevistas técnicas son **colaborativas**, no adversariales
+-   El entrevistador quiere que tengas éxito
+-   Es normal no saber la solución perfecta al inicio
+-   Muestra tu pensamiento, no el resultado
+
+### Práctica
+
+-   Resuelve 50-100 problemas
+-   No importa cantidad, importa comprensión
+-   Revisa soluciones de otros
+-   Entiende por qué funciona, no memorices
+
+### Técnicas de Relajación
+
+-   Respira profundo antes de hablar
+-   Si te quedas en blanco, di: "Déjame pensar un momento"
+-   Es normal tomar 5-10 minutos en un problema
+-   Nadie espera que resuelvas al instante
+
+### Después de la Entrevista
+
+-   Pide feedback específico
+-   No memorices la solución
+-   Practica variaciones del mismo problema
+-   Aprende patrones, no problemas individuales
+
+------------------------------------------------------------------------
+
+## Conclusión
+
+Las entrevistas técnicas evalúan:
+
+1.  **¿Puedes entender un problema?** → Escucha y pregunta
+2.  **¿Puedes planear una solución?** → Piensa en voz alta
+3.  **¿Puedes implementarla?** → Código limpio
+4.  **¿Puedes validarla?** → Tests y debugging
+
+Domina estas habilidades y tendrás éxito.
+
+**Buena suerte en tu entrevista! 🚀**
+
+# Algunos recursos útiles
+
+-   [LeetCode](https://leetcode.com/)
+-   [NeetCode](https://neetcode.io/)
+-   [visualgo](https://visualgo.net/en)
+-   [AlgoMonster](https://algo.monster/)
+-   [Data Structure and Algorithm Patterns for LeetCode Interviews – Tutorial](https://www.youtube.com/watch?v=Z_c4byLrNBU)
+-   [Data Structures and Algorithms Mega Course – Master Technical Interviews in 49 Hours](https://www.youtube.com/watch?v=xwI5OBEnsZU)
+-   [Algorithms and Data Structures Tutorial - Full Course for Beginners](https://www.youtube.com/watch?v=8hly31xKli0)
