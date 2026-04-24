@@ -18,7 +18,7 @@ lang: es
 # Introducción
 
 En esta guía aprenderemos las estructuras de datos y algoritmos más importantes para afrontar entrevistas técnicas. Nos enfocamos en Python y en los patrones que los entrevistadores esperan que domines.
-
+<!-- Comentario de prueba -->
 ------------------------------------------------------------------------
 
 # Estructuras de Datos Fundamentales
